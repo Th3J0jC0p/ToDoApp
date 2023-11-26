@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>ToDo List</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="container">
+			<header>
+				<h1>To Do List</h1>
+			</header>
+			<main class="content">
+				<div class="tasks-container">
+					<h2>Your Task:</h2>
+					<ol class="tasks tasks-list"></ol>
+				</div>
+				<div class="form">
+					<h2>Add Task:</h2>
+					<form action="index.html">
+						<label for="task">
+							<input type="text" id="task" maxlength="25" />
+						</label>
+						<label for="addTask">
+							<input
+								type="button"
+								id="addTask"
+								value="Add Task"
+							/>
+						</label>
+					</form>
+					<div class="propTab"></div>
+				</div>
+			</main>
+			<footer>
+				<p>Copyright &copy; 2023 Jakub Oźmina</p>
+			</footer>
+		</div>
+		<script src="script.js"></script>
+	</body>
+</html>
+
+<template id="properties">
+	<div class="properties">
+		<input type="button" class="cancel" data-index="" value="X" />
+		<div>
+			Title:
+			<form class="props" action="index.html">
+				<input type="text" id="title" />
+				<input
+					type="button"
+					class="changeName"
+					data-index=""
+					value="Change"
+				/>
+				<input type="input" id="description" data-index="" />
+				<input
+					type="button"
+					class="changeDescription"
+					data-index=""
+					value="Change"
+				/>
+				<input
+					type="button"
+					class="remove"
+					data-index=""
+					value="Remove"
+				/>
+			</form>
+		</div>
+	</div>
+</template>
