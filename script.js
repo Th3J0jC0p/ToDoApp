@@ -19,7 +19,11 @@ class App {
 		document.querySelector(".tasks").innerHTML = this.tasks
 			.map(
 				(task, index) =>
-					`<li class="taskItem" data-index="${index}">${task.taskName}</li>`
+					`<li id="" class="${
+						this.selected == index
+							? "taskItem selected"
+							: "taskItem"
+					}" data-index="${index}">${task.taskName}</li>`
 			)
 			.join("");
 
@@ -43,41 +47,85 @@ class App {
 	addTask(task) {
 		this.tasks.push(new Task(task.value));
 		this.printTasks();
+		this.closeProperties();
+	}
+
+	handleNameChange(index) {
+		this.tasks[index].taskName = document.querySelector("#title").value;
+		this.printTasks();
+		this.closeProperties();
+	}
+
+	handleDescriptionChange(index) {
+		//BUG: this.tasks[index].description = document.querySelector("#description").value; Shows error about value being null
+		this.tasks[index].description =
+			document.querySelector("#description").value || "";
+		this.printTasks();
+		this.closeProperties();
+	}
+
+	handleRemove(index) {
+		this.removeTask(index);
+		this.closeProperties();
+		this.printTasks();
 	}
 
 	printProperites(index) {
 		this.selected = index;
 		let task = this.tasks[index];
+		this.printTasks();
+
 		let template = document.querySelector("#properties");
 		let clone = template.content.cloneNode(true);
+
 		clone.querySelector("#title").value = task.taskName;
 		clone.querySelector(".changeName").dataset.index = index;
 		clone.querySelector("#description").value = task.description;
 		clone.querySelector(".changeDescription").dataset.index = index;
-		document.querySelector(".propTab").innerHTML = "";
-		document.querySelector(".propTab").appendChild(clone);
-		console.log(task);
+
+		let propTab = document.querySelector(".propTab");
+		propTab.innerHTML = "";
+		propTab.appendChild(clone);
+
+		propTab.addEventListener("click", event => {
+			if (event.target.className === "changeName")
+				this.handleNameChange(index);
+			if (event.target.className === "changeDescription")
+				this.handleDescriptionChange(index);
+			if (event.target.className === "remove") this.handleRemove(index);
+			if (event.target.className === "cancel") this.closeProperties();
+		});
 	}
 
 	closeProperties() {
+		this.selected = null;
 		document.querySelector(".propTab").innerHTML = "";
+		this.printTasks();
+	}
+
+	getTaskHandler(event) {
+		event.preventDefault();
+		let task = document.querySelector("#task");
+		if (task.value !== "") {
+			this.addTask(task);
+		}
+		task.value = "";
 	}
 
 	constructor() {
 		document.addEventListener("DOMContentLoaded", () => {
 			this.loadTasks();
-			document.querySelector("#addTask").addEventListener("click", () => {
-				event.preventDefault();
-				let task = document.querySelector("#task");
-				if (task.value !== "") {
-					this.addTask(task);
-				}
-				task.value = "";
-			});
+
+			document
+				.querySelector(".addTaskForm")
+				.addEventListener("submit", event => {
+					event.preventDefault();
+					this.getTaskHandler(event);
+				});
 
 			document
 				.querySelector(".tasks")
-				.addEventListener("click", (event) => {
+				.addEventListener("click", event => {
 					if (
 						event.target.className === "taskItem" &&
 						event.ctrlKey === true
@@ -86,27 +134,7 @@ class App {
 						this.closeProperties();
 					} else if (event.target.className === "taskItem") {
 						this.printProperites(event.target.dataset.index);
-					}
-				});
-			document
-				.querySelector(".propTab")
-				.addEventListener("click", (event) => {
-					if (event.target.className === "changeName") {
-						this.tasks[event.target.dataset.index].taskName =
-							document.querySelector("#title").value;
 						this.printTasks();
-						this.closeProperties();
-					}
-					if (event.target.className === "changeDescription") {
-						this.tasks[event.target.dataset.index].description =
-							document.querySelector("#description").value;
-						this.printTasks();
-						this.closeProperties();
-					}
-					if (event.target.className === "remove") {
-						this.removeTask(event.target.dataset.index);
-						this.printTasks();
-						this.closeProperties();
 					}
 				});
 		});
