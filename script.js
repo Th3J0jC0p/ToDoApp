@@ -11,7 +11,6 @@ class Task {
 		this.priority = priority;
 	}
 }
-
 class App {
 	tasks = [];
 	selected = null;
