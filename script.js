@@ -53,20 +53,16 @@ class App {
 	handleNameChange(index) {
 		this.tasks[index].taskName = document.querySelector("#title").value;
 		this.printTasks();
-		this.closeProperties();
 	}
 
 	handleDescriptionChange(index) {
-		//BUG: this.tasks[index].description = document.querySelector("#description").value; Shows error about value being null
 		this.tasks[index].description =
-			document.querySelector("#description").value || "";
+			document.querySelector("#description").value;
 		this.printTasks();
-		this.closeProperties();
 	}
 
 	handleRemove(index) {
 		this.removeTask(index);
-		this.closeProperties();
 		this.printTasks();
 	}
 
@@ -88,12 +84,20 @@ class App {
 		propTab.appendChild(clone);
 
 		propTab.addEventListener("click", event => {
-			if (event.target.className === "changeName")
-				this.handleNameChange(index);
-			if (event.target.className === "changeDescription")
-				this.handleDescriptionChange(index);
-			if (event.target.className === "remove") this.handleRemove(index);
-			if (event.target.className === "cancel") this.closeProperties();
+			if (event.target.className === "changeName") {
+				this.handleNameChange(event.target.dataset.index);
+				this.closeProperties();
+			} else if (event.target.className === "changeDescription") {
+				this.handleDescriptionChange(event.target.dataset.index);
+				this.closeProperties();
+			} else if (event.target.className === "remove") {
+				this.handleRemove(event.target.dataset.index);
+				this.closeProperties();
+			} else if (event.target.className === "cancel") {
+				this.closeProperties();
+			} else {
+				return;
+			}
 		});
 	}
 
